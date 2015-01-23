@@ -10,8 +10,9 @@ public class GiftCardController implements GiftCardService {
 
     @Override
     @HystrixCommand(fallbackMethod = "getGiftCardFallback" )
-    public ProtoMessage.GiftCard getGiftCard(String giftCardId) {
-        return ProtoMessage.GiftCard.newBuilder().setGiftCardId(giftCardId).build();
+    public ProtoMessage.GiftCards getGiftCard(String giftCardId) {
+        ProtoMessage.GiftCard build = ProtoMessage.GiftCard.newBuilder().setGiftCardId(giftCardId).build();
+        return ProtoMessage.GiftCards.newBuilder().addGiftCard(build).build();
         // v2
         // return ProtoMessage.GiftCard.newBuilder().setGiftCardId(giftCardId).setCampaignName("toet").build();
     }

@@ -7,7 +7,7 @@ server:
 
 turbine:
   aggregator:
-    clusterConfig: CHECKOUT
+    clusterConfig: CHECKOUT,GIFTCARD
   appConfig: checkout,giftcard
 
 eureka:

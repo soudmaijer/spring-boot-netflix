@@ -7,3 +7,8 @@ message GiftCard {
     // v2
     // optional string campaignName = 2;
 }
+
+// Wrap a list of GiftCard
+message GiftCards {
+    repeated GiftCard GiftCard = 1;
+}

@@ -12,5 +12,5 @@ import org.springframework.web.bind.annotation.RestController;
 public interface GiftCardService {
 
     @RequestMapping(value="/giftcard/{gift_card_id}", method = RequestMethod.GET)
-    public ProtoMessage.GiftCard getGiftCard(@PathVariable("gift_card_id") String giftCardId);
+    public ProtoMessage.GiftCards getGiftCard(@PathVariable("gift_card_id") String giftCardId);
 }

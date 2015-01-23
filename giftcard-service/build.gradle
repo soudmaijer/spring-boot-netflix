@@ -2,40 +2,48 @@ buildscript {
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:1.2.1.RELEASE"
         classpath 'ws.antonov.gradle.plugins:gradle-plugin-protobuf:0.9.1'
+        classpath "io.spring.gradle:dependency-management-plugin:0.3.1.RELEASE"
     }
     repositories {
         mavenCentral()
-        jcenter()
         maven {
             url "http://repo.spring.io/milestone"
         }
     }
 }
 
-apply plugin: 'groovy'
+//apply plugin: 'groovy'
 apply plugin: 'spring-boot'
 apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'protobuf'
 apply plugin: 'maven'
+apply plugin: "io.spring.dependency-management"
 
 repositories {
     mavenLocal()
     mavenCentral()
-    jcenter()
     maven {
         url "http://repo.spring.io/milestone"
     }
 }
 
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-starter-parent:1.0.0.RC1'
+        mavenBom 'org.springframework.boot:spring-boot-parent:1.2.1.RELEASE'
+    }
+    dependencies {
+    }
+}
 
 install {
     repositories.mavenInstaller {
         pom.project {
             parent {
-                groupId 'org.springframework.boot'
-                artifactId 'spring-boot-starter-parent'
-                version "1.2.1.RELEASE"
+                groupId 'org.springframework.cloud'
+                artifactId 'spring-cloud-starter-parent'
+                version "1.0.0.RC1"
             }
         }
     }
@@ -61,21 +69,32 @@ compileJava.dependsOn copyTask
 
 dependencies {
     compile "org.codehaus.groovy:groovy:2.3.7"
-    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.3"
     compile "com.mangofactory:swagger-springmvc:0.9.0"
+    compile("org.springframework.cloud:spring-cloud-starter-eureka:1.0.0.RC1") {
+        exclude group: 'org.slf4j', module: "slf4j-log4j12"
+        exclude group: 'log4j', module: "log4j"
+        exclude group: 'ch.qos.logback', module: 'logback-classic'
+    }
     compile "com.google.protobuf:protobuf-java:2.4.1", "com.googlecode.protobuf-java-format:protobuf-java-format:1.2"
     compile "org.springframework.boot:spring-boot-starter-web"
-    compile "org.springframework.boot:spring-boot-starter-log4j2"
     compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "org.springframework.cloud:spring-cloud-starter-eureka:1.0.0.RC1"
+    compile "org.springframework.boot:spring-boot-starter-log4j2"
     compile "org.springframework.cloud:spring-cloud-starter-hystrix:1.0.0.RC1"
-    compile "org.springframework.cloud:spring-cloud-starter-hystrix-dashboard:1.0.0.RC1"
 }
 
 configurations {
     // Spring boot bug, self-includes both log4J and logback and fails
+    all*.exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
     all*.exclude group: 'ch.qos.logback', module: 'logback-classic'
     all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+
+    compile {
+        description = 'compile classpath'
+        transitive = true
+    }
+    runtime {
+        extendsFrom compile
+    }
 }
 
 idea.module {
