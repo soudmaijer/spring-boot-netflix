@@ -1,0 +1,9 @@
+package com.bol.service.giftcard.proto;
+
+option java_outer_classname = "ProtoMessage";
+
+message GiftCard {
+    required string giftCardId = 1;
+    // v2
+    // optional string campaignName = 2;
+}

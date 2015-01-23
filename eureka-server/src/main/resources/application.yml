@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: "eureka"
+
+server:
+  port: 8761
+
+turbine:
+  aggregator:
+    clusterConfig: CHECKOUT
+  appConfig: checkout,giftcard
+
+eureka:
+  server:
+    enableSelfPreservation: false
+    # https://github.com/cfregly/fluxcapacitor/wiki/NetflixOSS-FAQ#eureka-service-discovery-load-balancer
+  instance:
+    hostname: localhost
+    virtualHostName: ${spring.application.name}
+    leaseRenewalIntervalInSeconds: 5
+    leaseExpirationDurationInSeconds: 15
+  client:
+      registryFetchIntervalSeconds: 15
+      region: default
+      registerWithEureka: true
+      fetchRegistry: true
+      serviceUrl:
+        defaultZone: http://127.0.0.1:8761/eureka/

@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: giftcard
+
+server:
+  port: 7777
+
+eureka:
+  instance:
+    hostname: 127.0.0.1
+    virtualHostName: ${spring.application.name}
+    metadataMap:
+      instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    region: default
+    registerWithEureka: true
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka/

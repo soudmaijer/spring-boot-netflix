@@ -1,0 +1,83 @@
+buildscript {
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.2.1.RELEASE"
+        classpath 'ws.antonov.gradle.plugins:gradle-plugin-protobuf:0.9.1'
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            url "http://repo.spring.io/milestone"
+        }
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'spring-boot'
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'protobuf'
+apply plugin: 'maven'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+    maven {
+        url "http://repo.spring.io/milestone"
+    }
+}
+
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            parent {
+                groupId 'org.springframework.boot'
+                artifactId 'spring-boot-starter-parent'
+                version "1.2.1.RELEASE"
+            }
+        }
+    }
+}
+
+ext {
+    protoGenerated = file("src/main/generated")
+}
+clean {
+    delete protoGenerated
+}
+
+protocPath = 'protoc'
+
+group = "com.bol.service.giftcard"
+version = "1.0-SNAPSHOT"
+
+task copyTask(type: Copy, dependsOn: generateProto) {
+    from "$buildDir/generated-sources/main"
+    into protoGenerated
+}
+compileJava.dependsOn copyTask
+
+dependencies {
+    compile "org.codehaus.groovy:groovy:2.3.7"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.3"
+    compile "com.mangofactory:swagger-springmvc:0.9.0"
+    compile "com.google.protobuf:protobuf-java:2.4.1", "com.googlecode.protobuf-java-format:protobuf-java-format:1.2"
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.boot:spring-boot-starter-log4j2"
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.springframework.cloud:spring-cloud-starter-eureka:1.0.0.RC1"
+    compile "org.springframework.cloud:spring-cloud-starter-hystrix:1.0.0.RC1"
+    compile "org.springframework.cloud:spring-cloud-starter-hystrix-dashboard:1.0.0.RC1"
+}
+
+configurations {
+    // Spring boot bug, self-includes both log4J and logback and fails
+    all*.exclude group: 'ch.qos.logback', module: 'logback-classic'
+    all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
+
+idea.module {
+    sourceDirs += protoGenerated
+}

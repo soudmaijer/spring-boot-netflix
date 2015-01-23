@@ -1,0 +1,12 @@
+package com.bol.service.checkout.proto;
+
+option java_outer_classname = "ProtoMessage";
+
+message OrderCandidate {
+    required string orderId = 1;
+    optional GiftCard giftcard = 2;
+}
+
+message GiftCard {
+    required string giftCardId = 1;
+}

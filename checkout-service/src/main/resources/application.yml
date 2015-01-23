@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: checkout
+
+giftcard:
+  ribbon:
+    NIWSServerListClassName: com.netflix.niws.loadbalancer.DiscoveryEnabledNIWSServerList
+    DeploymentContextBasedVipAddresses: giftcard
+
+server:
+  port: 8888
+
+eureka:
+  instance:
+    hostname: 127.0.0.1
+    virtualHostName: ${spring.application.name}
+    metadataMap:
+      instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    region: default
+    registerWithEureka: true
+    fetchRegistry: true
+    registryFetchIntervalSeconds: 5
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka/
