@@ -13,6 +13,7 @@ eureka:
       instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
   client:
     region: default
+    waitTimeInMsWhenSyncEmpty: 5
     registerWithEureka: true
     fetchRegistry: false
     serviceUrl:
