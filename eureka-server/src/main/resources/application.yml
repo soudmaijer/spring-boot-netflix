@@ -20,9 +20,10 @@ eureka:
     leaseRenewalIntervalInSeconds: 5
     leaseExpirationDurationInSeconds: 15
   client:
-      registryFetchIntervalSeconds: 15
       region: default
-      registerWithEureka: true
+      waitTimeInMsWhenSyncEmpty: 5
+      registryFetchIntervalSeconds: 10
+      registerWithEureka: false
       fetchRegistry: true
       serviceUrl:
         defaultZone: http://127.0.0.1:8761/eureka/
